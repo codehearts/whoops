@@ -55,3 +55,41 @@ console.log(JSON.parse(JSON.stringify(series))); // { ptr: 1114136 }
 ```
 
 Ideally the name and seasons would be included in the log output, as the pointer itself is not useful when debugging. Using an IDE debugger helps alleviate this with features that can invoke getter methods on objects, but it's difficult to record the state of the object programmatically
+
+## The Solution
+
+For Node.js at least, the output of `console.log` can be customized by defining a `[util.inspect.custom]` method within your class. `JSON.stringify` always calls `toJSON` on an object if it is defined. Knowing this, the generated `pkg/series.js` can be updated as follows:
+
+```javascript
+const util = require('util');
+
+class Series {
+
+    // ...
+
+    // Overrides the output of `JSON.stringify`
+    toJSON() {
+        return {
+          name: this.name,
+          seasons: this.seasons,
+        };
+    }
+
+    // Returns the JSON representation when inspected by `console.log` and friends
+    [util.inspect.custom](depth, options) {
+        return this.toJSON();
+    }
+
+    // ...
+
+}
+```
+
+The output is now much more useful:
+
+```javascript
+console.log(series); // { name: "OK K.O.! Let's Be Heroes", seasons: 3 }
+console.log(JSON.parse(JSON.stringify(series))); // { name: "OK K.O.! Let's Be Heroes", seasons: 3 }
+```
+
+The `toJSON` method can be defined in the Rust bindings, but it is not possible to create a binding for `[util.inspect.custom]` as the name creates an invalid symbol during compilation
