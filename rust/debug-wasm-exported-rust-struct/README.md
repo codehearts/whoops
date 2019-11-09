@@ -2,6 +2,24 @@
 
 ## Reproducing the Issue
 
+Clone this repo:
+
+```sh
+git clone https://github.com/codehearts/whoops.git
+cd whoops/rust/debug-wasm-exported-rust-struct/
+```
+
+Or perform a sparse checkout of this example only:
+
+```sh
+git clone --no-checkout --depth 1 https://github.com/codehearts/whoops.git
+cd whoops/
+git config core.sparseCheckout true
+echo "rust/debug-wasm-exported-rust-struct/" > .git/info/sparse-checkout
+git checkout master
+cd rust/debug-wasm-exported-rust-struct/
+```
+
 To build and run this example:
 
 ```sh
