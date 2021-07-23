@@ -1,0 +1,8 @@
+[package]
+name = "whoops"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+avro-rs="0.13.0"
+serde={ version="1.0.126", default-features=false, features=["std", "derive"] }
